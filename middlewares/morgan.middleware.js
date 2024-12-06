@@ -2,7 +2,6 @@ import morgan from "morgan";
 import logger from "../utils/logger.js";
 
 const stream = {
-  // Use the http severity
   write: (message) => logger.http(message.trim()),
 };
 

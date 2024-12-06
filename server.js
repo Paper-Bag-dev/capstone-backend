@@ -4,8 +4,17 @@ import morganMiddleware from "./middlewares/morgan.middleware.js";
 import logger from "./utils/logger.js";
 import eventsRoutes from "./api/v1/events/index.js"
 import arduinoRoutes from "./api/v1/arduino/index.js"
+import { config } from "dotenv";
+import connectDb from "./Db/connect.js";
+
+config({
+  path: ".env"
+});
 
 const app = express();
+
+const PORT = process.env.PORT || 5000;
+
 
 
 app.use(express.json());
@@ -29,6 +38,19 @@ app.get("/api/status", (req, res) => {
   });
 });
 
-app.listen(4000, () => {
-  logger.info("Server is running on port 4000");
+app.listen(PORT, () => {
+  logger.info(`Server is running on port ${PORT}`);
 });
+
+// databse connection 
+const databaseConnection = async () => {
+  try {
+    await connectDb(process.env.MONGO_URL);
+    app.get("/", (req, res) => {
+      res.send("Hi Welcome to Capstone Backend")
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+databaseConnection();
